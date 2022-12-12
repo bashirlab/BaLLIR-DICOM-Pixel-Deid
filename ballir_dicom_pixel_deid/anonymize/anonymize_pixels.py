@@ -3,14 +3,16 @@
 import argparse
 import os
 import time
+import keras_ocr
 
 from glob import glob
 from natsort import natsorted
 import pydicom as dcm
 from tqdm import tqdm
+import tensorflow as tf
 
-#from ballir_dicom_anonymizer.anonymize.dicom_anonymizer import DicomAnonymizer
-#from ballir_dicom_anonymizer.error_handling import UnsupportedFileError
+from ballir_dicom_pixel_deid.anonymize.dicom_anonymizer import DicomAnonymizer
+from ballir_dicom_pixel_deid.error_handling import UnsupportedFileError
 
 import logging
 
@@ -112,37 +114,41 @@ def anonymize_dicom_files(
     """Anonymize all supported files in target directory."""
     start = time.time()
 
+    modalities = ["US","CT","MR","XR"]
     US_list, CT_list, MR_list, XR_list, not_sorted = parse_dicoms(input_directory)
-    print("US")
-    print(US_list)
-    print("CT")
-    print(CT_list)
-    print("MR")
-    print(MR_list)
-    print("XR")
-    print(XR_list)
-    print("Not Sorted")
-    print(not_sorted)
+    image_dict = {'US':US_list, 'CT':CT_list, 'MR':MR_list, 'XR':XR_list}
 
-    """dicom_anonymizer = DicomAnonymizer(
-        output_directory=output_directory
-    )
-    
-    for dicom_file_path in tqdm(
-        all_dicom_file_paths,
-        position=0,
-        leave=True,
-        desc=f"Anonymizing DICOM files in {os.path.basename(input_directory)}...",
-    ):
-        log.info(f"processing {dicom_file_path}...")
-        try:
-            anonymized_dicom_file = dicom_anonymizer.anonymize(dicom_file_path)
-            anonymized_write_path = write_anonymized_dicom_file(
-                anonymized_dicom_file, output_directory, dicom_file_path, input_directory
-            )
-        except UnsupportedFileError as e:
-            log.exception(e)
-"""
+    dicom_anonymizer = DicomAnonymizer()
+
+    for modality in modalities:
+        found_dicoms = image_dict[modality]
+        if len(found_dicoms) == 0:
+            continue
+
+        directory=os.getcwd()
+        print(directory)
+
+        #if modality == "US":
+            #model = ''
+        #detector = keras_ocr.detection.Detector()
+        #detector.model.load_weights('detector_2022-05-12T09:58:08.272889.h5')
+        #pipeline = keras_ocr.pipeline.Pipeline(detector=detector)
+
+        for dicom_file_path in tqdm(
+            found_dicoms,
+            position=0,
+            leave=True,
+            desc=f"Anonymizing {modality} DICOM files in {os.path.basename(input_directory)}...",
+        ):
+            log.info(f"processing {dicom_file_path}...")
+            try:
+                anonymized_dicom_file = dicom_anonymizer.anonymize(dicom_file_path)
+                anonymized_write_path = write_anonymized_dicom_file(
+                    anonymized_dicom_file, output_directory, dicom_file_path, input_directory
+                )
+            except UnsupportedFileError as e:
+                log.exception(e)
+
     elapsed_time = time.time() - start
     log.info(f"Anonymization completed in {elapsed_time} seconds")
     print(f"Anonymization completed in {elapsed_time} seconds")

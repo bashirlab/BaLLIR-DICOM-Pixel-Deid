@@ -10,6 +10,9 @@ numpy = "^1.21.4"
 pydicom = "^2.2.2"
 natsort = "^8.0.0"
 tqdm = "^4.62.3"
+keras_ocr = "^0.8.9"
+tensorflow-gpu = "^2.8.0"
+cudatoolkit = "11.7.0"
 
 [tool.poetry.scripts]
 anonymize_pixels = 'ballir_dicom_pixel_deid.anonymize.anonymize_pixels:main'

@@ -4,8 +4,8 @@ Tool to build blank-slate DICOM files, populate with required meta-data, and pop
 
 import pydicom as dcm
 
-from ballir_dicom_anonymizer.pixel_handling.pixel_data_writer import PixelDataWriter
-from ballir_dicom_anonymizer.error_handling import (
+from ballir_dicom_pixel_deid.pixel_handling.pixel_data_writer import PixelDataWriter
+from ballir_dicom_pixel_deid.error_handling import (
     DicomDirError,
     MissingPixelDataError,
     ReportDetectedError,
@@ -17,9 +17,9 @@ log = logging.getLogger(__name__)
 
 
 class DicomAnonymizer:
-    """Builds fresh DICOM file and populates with anonymized data."""
+    """Builds fresh DICOM file and populates with anonymized pixel data."""
 
-    def __init__(self, output_directory: str):
+    def __init__(self):
         self.pixel_data_writer = PixelDataWriter()
 
     def check_valid_dicom(self, original_dicom_file):
