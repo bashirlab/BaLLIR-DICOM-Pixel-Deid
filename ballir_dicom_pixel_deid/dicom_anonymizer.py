@@ -4,8 +4,8 @@ Tool to build blank-slate DICOM files, populate with required meta-data, and pop
 
 import pydicom as dcm
 
-from ballir_dicom_pixel_deid.pixel_handling.pixel_data_writer import PixelDataWriter
-from ballir_dicom_pixel_deid.error_handling import (
+from pixel_data_writer import PixelDataWriter
+from error_handling import (
     DicomDirError,
     MissingPixelDataError,
     ReportDetectedError,

@@ -3,6 +3,7 @@
 import argparse
 import os
 import time
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' # Hide Tensorflow info messages (warnings and errors should still show)
 import keras_ocr
 
 from glob import glob
@@ -11,8 +12,10 @@ import pydicom as dcm
 from tqdm import tqdm
 import tensorflow as tf
 
-from ballir_dicom_pixel_deid.anonymize.dicom_anonymizer import DicomAnonymizer
-from ballir_dicom_pixel_deid.error_handling import UnsupportedFileError
+#from ballir_dicom_pixel_deid.anonymize.dicom_anonymizer import DicomAnonymizer
+#from ballir_dicom_pixel_deid.error_handling import UnsupportedFileError
+from dicom_anonymizer import DicomAnonymizer
+from error_handling import UnsupportedFileError
 
 import logging
 
@@ -124,9 +127,6 @@ def anonymize_dicom_files(
         found_dicoms = image_dict[modality]
         if len(found_dicoms) == 0:
             continue
-
-        directory=os.getcwd()
-        print(directory)
 
         #if modality == "US":
             #model = ''
